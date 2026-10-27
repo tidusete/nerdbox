@@ -1,3 +1,28 @@
+# --- Habilitación de Debug Info y DWARF (Requisito estricto de BTF) ---
+
+# --- Generación de BTF para CO-RE (CrowdStrike) ---
+CONFIG_PAHOLE_HAS_SPLIT_BTF=y
+
+# --- eBPF Subsystem ---
+CONFIG_BPF=y
+CONFIG_BPF_SYSCALL=y
+CONFIG_BPF_JIT=y
+CONFIG_HAVE_EBPF_JIT=y
+CONFIG_CGROUP_BPF=y
+
+# --- Tracing y Kprobes (necesarios para los hooks de Falcon) ---
+CONFIG_KPROBES=y
+CONFIG_KPROBE_EVENTS=y
+CONFIG_UPROBES=y
+CONFIG_UPROBE_EVENTS=y
+CONFIG_FTRACE=y
+CONFIG_TRACEPOINTS=y
+CONFIG_PERF_EVENTS=y
+
+# --- Exportar la configuración del kernel a /proc/config.gz para depurar ---
+
+
+
 #
 # Automatically generated file; DO NOT EDIT.
 # Linux/arm64 6.12.44 Kernel Configuration
@@ -97,12 +122,18 @@ CONFIG_ARCH_WANT_DEFAULT_BPF_JIT=y
 #
 CONFIG_BPF_SYSCALL=y
 CONFIG_BPF_JIT=y
+CONFIG_HAVE_EBPF_JIT=y
+CONFIG_CGROUP_BPF=y
 # CONFIG_BPF_JIT_ALWAYS_ON is not set
 CONFIG_BPF_JIT_DEFAULT_ON=y
 # CONFIG_BPF_UNPRIV_DEFAULT_OFF is not set
 # CONFIG_BPF_PRELOAD is not set
 # CONFIG_BPF_LSM is not set
 # end of BPF subsystem
+
+# Kprobes and Tracing (Used by Falcon to hook syscalls)
+CONFIG_KPROBE_EVENTS=y
+CONFIG_UPROBE_EVENTS=y
 
 CONFIG_PREEMPT_NONE_BUILD=y
 CONFIG_PREEMPT_NONE=y
@@ -146,8 +177,6 @@ CONFIG_RCU_NOCB_CPU=y
 # CONFIG_RCU_LAZY is not set
 # end of RCU Subsystem
 
-CONFIG_IKCONFIG=y
-CONFIG_IKCONFIG_PROC=y
 # CONFIG_IKHEADERS is not set
 CONFIG_LOG_BUF_SHIFT=17
 CONFIG_LOG_CPU_MAX_BUF_SHIFT=12
@@ -3318,12 +3347,7 @@ CONFIG_DEBUG_KERNEL=y
 #
 # Compile-time checks and compiler options
 #
-CONFIG_DEBUG_INFO=y
 CONFIG_AS_HAS_NON_CONST_ULEB128=y
-CONFIG_DEBUG_INFO_NONE=y
-# CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT is not set
-# CONFIG_DEBUG_INFO_DWARF4 is not set
-# CONFIG_DEBUG_INFO_DWARF5 is not set
 CONFIG_FRAME_WARN=2048
 # CONFIG_STRIP_ASM_SYMS is not set
 # CONFIG_READABLE_ASM is not set
@@ -3495,7 +3519,7 @@ CONFIG_CONTEXT_SWITCH_TRACER=y
 CONFIG_TRACING=y
 CONFIG_GENERIC_TRACER=y
 CONFIG_TRACING_SUPPORT=y
-# CONFIG_FTRACE is not set
+CONFIG_FTRACE=y
 # CONFIG_RING_BUFFER_STARTUP_TEST is not set
 # CONFIG_RING_BUFFER_VALIDATE_TIME_DELTAS is not set
 # CONFIG_RV is not set
@@ -3531,3 +3555,15 @@ CONFIG_ARCH_USE_MEMTEST=y
 #
 # end of Rust hacking
 # end of Kernel hacking
+# Habilitación estricta de DWARF para que el kernel compile con símbolos y genere BTF
+CONFIG_DEBUG_INFO=y
+CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
+# CONFIG_DEBUG_INFO_NONE is not set
+# CONFIG_DEBUG_INFO_REDUCED is not set
+# CONFIG_DEBUG_INFO_SPLIT is not set
+CONFIG_DEBUG_INFO_BTF=y
+CONFIG_PAHOLE_HAS_SPLIT_BTF=y
+
+# Diagnóstico: expone la configuración activa en /proc/config.gz
+CONFIG_IKCONFIG=y
+CONFIG_IKCONFIG_PROC=y
